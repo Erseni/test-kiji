@@ -1,0 +1,42 @@
+{
+    name : "persons",
+    version : "layout-1.1",
+    keys_format : {
+        encoding : "FORMATTED",
+        salt : {
+            hash_size : 2
+        },
+        components : [{
+                name : "person_id",
+                type : "INTEGER"
+            }
+        ]
+    },
+    locality_groups : [{
+            name : "meta_data",
+            in_memory : false,
+            max_versions : 1,
+            ttl_seconds : 2147483647,
+            compression_type : "SNAPPY",
+            families : [{
+                    name : "meta_data",
+                    columns : [{
+                            name : "id",
+                            column_schema : {
+                                type : "INLINE",
+                                value : '"int"'
+                            }
+                        }, {
+                            name : "name",
+                            column_schema : {
+                                type : "INLINE",
+                                value : '"string"'
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+
+}
