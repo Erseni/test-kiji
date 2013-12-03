@@ -24,7 +24,7 @@ public class PersonDaoTest {
 
     @Before
     public void setUp() throws IOException {
-        dao = new PersonDao(2181, new String[] {"off-zk-01-ber.rgoffice.net", "off-zk-02-ber.rgoffice.net"}, "default");
+        dao = new PersonDao(2181, new String[] {"localhost"}, "default");
         dao.deletePersons();
     }
 
