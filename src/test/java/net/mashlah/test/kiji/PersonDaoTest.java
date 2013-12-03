@@ -35,7 +35,9 @@ public class PersonDaoTest {
         person.setName("Erik");
         byte[] image = new byte[1024];
         random.nextBytes(image);
-        dao.storePerson(person, image);
+        for (int i = 0; i < 1000; i++) {
+            dao.storePerson(person, image);
+        }
     }
 
     @Test
