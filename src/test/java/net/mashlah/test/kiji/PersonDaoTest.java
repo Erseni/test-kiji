@@ -40,11 +40,11 @@ public class PersonDaoTest {
 
     @Test
     public void testMultiThreadingStore() {
-        ExecutorService executorService = Executors.newFixedThreadPool(5);
+        ExecutorService executorService = Executors.newFixedThreadPool(10);
 
         List<Future> futures = new ArrayList();
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 1000; i++) {
             final int id = i;
             Future<?> f = executorService.submit(new Runnable() {
                 @Override
@@ -63,12 +63,17 @@ public class PersonDaoTest {
             });
             futures.add(f);
         }
+        boolean failed = false;
         for (Future future : futures) {
             try {
                 future.get();
             } catch (Exception e) {
                 logger.error("Error", e);
+                failed = true;
             }
+        }
+        if (failed) {
+            logger.error("One or more task failed");
         }
 
     }

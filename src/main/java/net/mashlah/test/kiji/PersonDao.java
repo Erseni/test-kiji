@@ -5,6 +5,9 @@ import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.kiji.schema.AtomicKijiPutter;
 import org.kiji.schema.EntityId;
 import org.kiji.schema.Kiji;
+import org.kiji.schema.KijiDataRequest;
+import org.kiji.schema.KijiRowData;
+import org.kiji.schema.KijiRowScanner;
 import org.kiji.schema.KijiTable;
 import org.kiji.schema.KijiTablePool;
 import org.kiji.schema.KijiTableReader;
@@ -68,7 +71,24 @@ public class PersonDao {
 
     public void deletePersons() throws IOException {
         KijiTable table = pool.get("persons");
-        KijiTableWriter writer = table.getWriterFactory().openTableWriter();
-        KijiTableReader reader = table.getReaderFactory().openTableReader();
+        KijiTableWriter writer = null;
+        KijiTableReader reader = null;
+        try {
+            writer = table.getWriterFactory().openTableWriter();
+            reader = table.getReaderFactory().openTableReader();
+            KijiDataRequest dataRequest = KijiDataRequest.create("meta_data");
+            KijiRowScanner scanner = reader.getScanner(dataRequest);
+            for (KijiRowData kijiRowData : scanner) {
+                writer.deleteRow(kijiRowData.getEntityId());
+            }
+        } finally {
+            table.release();
+            if (writer != null) {
+                writer.close();
+            }
+            if (reader != null) {
+                reader.close();
+            }
+        }
     }
 }
